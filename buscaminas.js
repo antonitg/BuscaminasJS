@@ -76,6 +76,22 @@ console.log("asdasd");
             document.getElementById(parseInt(bombs[index])+1).value++
             bottom = false
         }
+        if (!rightBorders.includes(bombs[index]) && !topBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index])-(numGlobal-1)).value++
+            bottom = false
+        }
+        if (!rightBorders.includes(bombs[index]) && !bottomBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index])+(numGlobal+1)).value++
+            bottom = false
+        }
+        if (!leftBorders.includes(bombs[index]) && !bottomBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index])+(numGlobal-1)).value++
+            bottom = false
+        }
+        if (!leftBorders.includes(bombs[index]) && !topBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index])-(numGlobal+1)).value++
+            bottom = false
+        }
     }
 }
 
