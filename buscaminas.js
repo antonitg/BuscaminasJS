@@ -3,8 +3,12 @@ var leftBorders = []
 var rightBorders = []
 var topBorders = []
 var bottomBorders = []
-
+var numGlobal = 0;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 function generate(num,bomb) {
+    numGlobal = num;
     var contJoc = document.getElementById("contJoc");
     var tmny = 30*num;
     contJoc.setAttribute("style","width:"+tmny+"px;") 
@@ -36,24 +40,42 @@ function generate(num,bomb) {
     }
     rightBorders[0] = casfinal;
     
-    // Bucle indicar valors
-    for (let index = 0; index < bombs.length; index++) {
-        if (!topBorders.includes(bombs[index])) {
-            sumValue(bombs[index] - num)
-            top = false;
-        } else {
-            top = true
-        }
-        if (!bottomBorders.includes(bombs[index])) {
-            sumValue(bombs[index]+num)
-            bottom = false
-        }
-    }
+
 }
 function sumValue(num) {
     toSum = document.getElementById(num.toString())
     console.log(toSum);
-    if (toSum.value != "bomb") {
-        toSum.value = (toSum.value+1)
-    } 
+    // if (toSum.value != "bomb") {
+        toSum.value++
+    // } 
 }
+
+    function addValBombs() {
+    sleep(10000)
+console.log("asdasd");
+    // Bucle indicar valors
+    for (let index = 0; index < bombs.length; index++) {
+        if (!topBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index]) - numGlobal).value++
+            top = false;
+        } else {
+            top = true
+        }
+        console.log(numGlobal);
+        if (!bottomBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index]) + numGlobal).value++
+            bottom = false
+        } else {
+            bottom = true
+        }
+        if (!leftBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index]) - 1).value++
+            bottom = false
+        }
+        if (!rightBorders.includes(bombs[index])) {
+            document.getElementById(parseInt(bombs[index])+1).value++
+            bottom = false
+        }
+    }
+}
+
