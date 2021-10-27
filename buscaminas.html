@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscaminas</title>
-    <script src="buscaminas.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.all.min.js"></script>
+
+
+    <script src="buscaminas.js" defer></script>
     <link rel="stylesheet" href="buscaminas.css">
 </head>
+
 <body>
-    <div class="contJoc" id="contJoc"></div>
+    <div id="joc">
+        <div id="options">
+            <div id="clock"></div>
+            <div id="puntos"></div>
+            <div id="container_lvl">
+                <div id="lvl1" onclick="start(10,10)">Facil</div>
+                <div id="lvl2" onclick="start(14,30)">Medio</div>
+                <div id="lvl3" onclick="start(18,40)">Dificil</div>
+            </div>
+        </div>
+        <div class="contJoc" id="contJoc"></div>
+    </div>
 </body>
+
 </html>
