@@ -39,7 +39,6 @@ async function clock() {
         } else {
             document.getElementById("clock").innerText = "Tiempo: " + show_segundos;
         }
-
         await sleep(1000);
         segundos++;
         if (segundos == 60) {
@@ -47,18 +46,13 @@ async function clock() {
             minutos++;
         }
 
-        // max_points = max_points - rest_points;
-
-        // if(max_points < 0){
-        //     max_points = 0;
-        // }
     }
 }
 async function points(max_points, rest_points) {
     while (sessionStorage.getItem("clock") == 1) {
         document.getElementById("puntos").innerText = "Puntos: " + max_points;
         await sleep(100);
-        max_points = max_points - rest_points;
+        var max_points = max_points - rest_points;
         if (max_points < 0) {
             max_points = 0;
         }
@@ -111,7 +105,6 @@ function generate(num, bomb) {
 function addValBombs() {
     // Bucle indicar valors
     for (let index = 0; index < bombs.length; index++) {
-        console.log(bombs[index]);
         if (!topBorders.includes(bombs[index])) {
 
             (bombs.indexOf(document.getElementById(parseInt(bombs[index]) - numGlobal).value) == -1) && document.getElementById(parseInt(bombs[index]) - numGlobal).value++
@@ -143,17 +136,12 @@ function addValBombs() {
 function addBandera(id) {
     if (reveled.indexOf(id.toString()) < 0) {
         if (banderas.indexOf(id) >= 0) {
-            console.log("quitar");
             document.getElementById(id).innerHTML = "";
             banderas.splice(banderas.indexOf(id), 1);
         } else {
             if (banderas.length <= bombs.length) {
                 document.getElementById(id).innerHTML = "&#128681;";
                 banderas.push(id);
-                console.log("poner");
-                console.log(banderas);
-
-
                 check_win();
             }
         }
@@ -174,7 +162,10 @@ function check_win() {
         }
 
         if (check && (reveled.length + bombs.length) == (numGlobal * numGlobal)) {
-            alert("you win");
+            alert("You win with " + parseInt(document.getElementById("puntos").innerHTML.split(" ")[1]));
+            send_score()
+            window.location.reload();
+
         }
     }
 }
@@ -207,7 +198,6 @@ function pintReveled() {
 }
 
 function click(id) {
-    // document.getElementById(id).innerHTML = document.getElementById(id).value
     reveled.push(id)
     toCheck = toCheck.filter(function (el) {
         return reveled.indexOf(el) < 0;
@@ -215,29 +205,18 @@ function click(id) {
     if (document.getElementById(id).value == 0) {
         arr2 = getAr(id)
         toCheck = toCheck.concat(arr2)
-        // console.log(toCheck);
         toCheck = toCheck.filter(function (el) {
             return reveled.indexOf(el) < 0;
         });
-        //   console.log(toCheck);
         for (let index = 0; index < toCheck.length; index++) {
-
-            // click(toCheck[index])
-
-            // console.log(toCheck[index]);
             if (toCheck[index] < numGlobal * numGlobal) {
                 if (document.getElementById(toCheck[index]).value != 0) {
                     document.getElementById(toCheck[index]).innerHTML = document.getElementById(toCheck[index]).value
-                    // document.getElementById(toCheck[index]).classList.add("reveled")
                     reveled.push(toCheck[index])
                     pintReveled();
-
                 } else {
                     click(toCheck[index])
                     pintReveled();
-
-                    // console.log("To click" + toCheck[index]);
-
                 }
 
             }
@@ -245,7 +224,7 @@ function click(id) {
     } else {
         if (bombs.indexOf(id.toString()) > -1) {
             //Es una bomba
-            bombs.forEach(function(id_tnt){
+            bombs.forEach(function (id_tnt) {
                 document.getElementById(id_tnt).innerHTML = "&#128163;";
                 document.getElementById(id_tnt).classList.add("reveled");
                 reveled.push(id_tnt.toString);
@@ -255,7 +234,9 @@ function click(id) {
             for (let index = 0; index < bombs.length; index++) {
                 document.getElementById(bombs[index]).classList.add("bomb")
             }
-            alert("Has perdido");
+                alert("You lose :("); 
+                window.location.reload();
+            
         } else {
             //No es una bomba
             pintReveled();
@@ -270,17 +251,14 @@ function click(id) {
 
 function getAr(id) {
     arr = []
-
     if (!topBorders.includes(id.toString())) {
         arr.push((parseInt(id) - numGlobal).toString())
     }
     if (!bottomBorders.includes(id.toString())) {
         arr.push((parseInt(id) + numGlobal).toString())
-
     }
     if (!leftBorders.includes(id.toString())) {
         arr.push((parseInt(id) - 1).toString())
-
     }
     if (!rightBorders.includes(id.toString())) {
         arr.push((parseInt(id) + 1).toString())
@@ -311,18 +289,29 @@ function start(num1, num2) {
         addValBombs();
         putEvLis();
 
-        console.log(bombs);
-        console.log(leftBorders);
-        console.log(rightBorders);
-        console.log(toCheck);
-        console.log(topBorders);
-        console.log(bottomBorders);
-        console.log(numGlobal);
-        console.log(reveled);
     }
 }
 
-// BOMBA &#128163;
-// EXPLOSIO &#128165;
+function send_score() {
+    var token = localStorage.getItem("token");
+    if (token) {
+        var http = new XMLHttpRequest();
+        var url = 'http://0.0.0.0:4000/api/rank/update';
+        var params = JSON.stringify({
+            nameGame: "buscaminas_anja",
+            score: parseInt(document.getElementById("puntos").innerHTML.split(" ")[1])
+        });
+        http.open('POST', url, true);
 
-// BANDERA &#128681;
+        //Send the proper header information along with the request
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.setRequestHeader('Authorization', 'Token ' + token);
+
+        http.onreadystatechange = function () { //Call a function when the state changes.
+            if (http.readyState == 4 && http.status == 200) {
+                console.log(http.responseText);
+            }
+        }
+        http.send(params);
+    }
+}

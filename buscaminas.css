@@ -28,18 +28,21 @@ body {
     background-color: #c0c0c0;
     cursor: pointer;
     text-align: center;
-    font-size: 28px;
+    font-size: 18px;
     font-family: "VT323";
     font-weight: 600;
+}
+
+
+.reveled {
+    /* background-color:; */
+    font-size: 28px!important;
+    border: 1px solid #808080 !important;
 }
 .bomb {
     /* border: 1px red solid; */
     /* background-color: lightcoral; */
     font-size: 18px !important;
-}
-.reveled {
-    /* background-color:; */
-    border: 1px solid #808080 !important;
 }
 #start{
     padding: 1%;
